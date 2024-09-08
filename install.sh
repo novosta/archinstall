@@ -138,13 +138,23 @@ echo "Defaults rootpw" >> /etc/sudoers
 # Install and configure GRUB for UEFI
 echo -e "${YELLOW}Installing GRUB bootloader...${RESET}"
 pacman -S --noconfirm grub efibootmgr > /dev/null 2>&1
+
+# Install GRUB to the EFI directory
 grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB > /dev/null 2>&1
+
+# Configure GRUB to boot automatically with UUIDs and no timeout
+sed -i 's/GRUB_TIMEOUT=[0-9]*/GRUB_TIMEOUT=0/' /etc/default/grub
+sed -i 's/#GRUB_DISABLE_LINUX_PARTUUID=false/GRUB_DISABLE_LINUX_PARTUUID=false/' /etc/default/grub
+
+# Generate the GRUB configuration file
 grub-mkconfig -o /boot/grub/grub.cfg > /dev/null 2>&1
 echo -e "${GREEN}GRUB installed and configured.${RESET}"
 
-# Enable NetworkManager for internet access
-echo -e "${YELLOW}Enabling NetworkManager...${RESET}"
+# Install and enable NetworkManager
+echo -e "${YELLOW}Installing and enabling NetworkManager...${RESET}"
+pacman -S --noconfirm networkmanager > /dev/null 2>&1
 systemctl enable NetworkManager > /dev/null 2>&1
+echo -e "${GREEN}NetworkManager installed and enabled.${RESET}"
 
 # Enable UFW firewall for security
 echo -e "${YELLOW}Enabling UFW firewall...${RESET}"
