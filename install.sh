@@ -73,7 +73,7 @@ mount ${DISK}p4 /mnt/home
 
 # Install base system including nano and linux headers
 echo "Installing base system packages (linux, linux-headers, nano)..."
-pacstrap /mnt base linux linux-firmware linux-headers nano
+pacstrap /mnt base linux linux-firmware linux-headers nano sudo
 if [ $? -ne 0 ]; then
     echo "Error during pacstrap. Exiting..."
     exit 1
