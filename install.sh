@@ -88,10 +88,15 @@ mkdir /mnt/home > /dev/null 2>&1
 mount ${DISK}p4 /mnt/home > /dev/null 2>&1
 echo -e "${GREEN}Partitions mounted.${RESET}"
 
-# Install base system including nano, linux headers, and sudo
+# Install base system including nano, linux headers, sudo (long-running task)
 echo -e "${YELLOW}Installing base system packages (linux, linux-headers, nano, sudo)...${RESET}"
-progress_bar 30 &  # Simulate a progress bar for 30 seconds (replace with actual pacstrap time)
+
+# Start progress bar in the background and run pacstrap in the foreground
+progress_bar 82 &  # Simulating ~82 seconds (1 min 22 sec) for pacstrap
 pacstrap /mnt base linux linux-firmware linux-headers nano sudo > /dev/null 2>&1
+
+# Wait for the progress bar to finish before continuing
+wait
 echo -e "${GREEN}Base system installed.${RESET}"
 
 # Generate fstab
